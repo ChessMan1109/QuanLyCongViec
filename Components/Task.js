@@ -1,6 +1,6 @@
 //Components/Task.js
 import React from 'react';
-import {  Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {  Text, TouchableOpacity, StyleSheet, Alert, View } from 'react-native';
 
 const Task = ({ task, onDelete, onEdit }) => {
   console.log("Task:", task); 
@@ -11,7 +11,7 @@ const Task = ({ task, onDelete, onEdit }) => {
   const handleDelete = () => {
     Alert.alert(
       'Xác Nhận Xóa',
-      'Bạn có chắc chắn muốn xóa không?',
+      'Bạn muốn xóa công việc này không?',
       [
         {
           text: 'Không',
@@ -28,13 +28,15 @@ const Task = ({ task, onDelete, onEdit }) => {
   };''
 
   return (
-    <TouchableOpacity style={styles.task} >
-      <Text style={styles.taskText}>{task.name}</Text>
-      <Text style={styles.taskText}>{task.time}</Text>
-      <TouchableOpacity onPress={onEdit}>
+    <TouchableOpacity style={styles.task}>
+      <View style={styles.taskDetails}>
+        <Text style={styles.taskText}>{task.name}</Text>
+        <Text style={styles.taskText}>{task.time}</Text>
+      </View>
+      <TouchableOpacity onPress={onEdit} style={styles.buttonContainer}>
         <Text style={styles.editButton}>Edit</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleDelete}>
+      <TouchableOpacity onPress={handleDelete} style={styles.buttonContainer}>
         <Text style={styles.deleteButton}>Delete</Text>
       </TouchableOpacity>
     </TouchableOpacity>
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     padding: 10,
-    borderColor: 'lightgray',
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: '#fff',
@@ -61,6 +63,15 @@ const styles = StyleSheet.create({
   },
   editButton: {
     color: 'green',
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 30, 
+  },
+  taskDetails: {
+    flex: 0.8, 
   },
 });
 
