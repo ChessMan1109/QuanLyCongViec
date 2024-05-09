@@ -149,9 +149,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 10,
     backgroundColor: '#f0f0f0',
-    backgroundImage:'url("hinhanh.png")',
   },
   taskContainer: {
     flex: 3,
@@ -159,9 +158,11 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 1,
     fontWeight: 'bold',
     color: 'blue',
+    textAlign: 'center',
+    marginTop: 20,
   },
   button: {
     backgroundColor: 'blue',
