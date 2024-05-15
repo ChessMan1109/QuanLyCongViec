@@ -5,8 +5,8 @@ import DatePicker from '@react-native-community/datetimepicker';
 const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState(taskTag);
-  const [selectedDate, setSelectedDate] = useState(new Date()); // time 
-
+  const [selectedDate, setSelectedDate] = useState(null); // Set initial value to null
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const toggleImportanceModal = () => {
     setIsImportanceModalVisible(!isImportanceModalVisible);
@@ -17,8 +17,15 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
     toggleImportanceModal();
   };
   //time
-  const handleDateChange = (date) => {
-    setSelectedDate(date); // Update selected date
+  const openDatePicker = () => {
+    setIsDatePickerVisible(true);
+  };
+
+  const handleDateChange = (event, date) => {
+    if (date) {
+      setSelectedDate(date);
+      setIsDatePickerVisible(false); // Close date picker after selection
+    }
   };
 
   return (
@@ -40,15 +47,18 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
           />
 
         {/* Date picker */}
-        <View style={styles.input}>
-            <Text style={styles.inputLabel}>Thời Gian</Text>
+        <TouchableOpacity style={styles.input} onPress={openDatePicker}>
+          <Text style={styles.inputLabel}>Thời Gian</Text>
+          <Text>{selectedDate ? selectedDate.toLocaleString() : 'Chọn thời gian'}</Text>
+        </TouchableOpacity>
+
+        {isDatePickerVisible && (
           <DatePicker
-            date={selectedDate}
-            onDateChange={handleDateChange}
-            mode="datetime" // You can choose 'date', 'time', or 'datetime'
-            value={selectedDate}
+            value={selectedDate || new Date()}
+            mode="datetime"
+            onChange={handleDateChange}
           />
-          </View>
+        )}
 
           <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
             <Text style={styles.importanceText}>Mức Độ Quan Trọng</Text>
