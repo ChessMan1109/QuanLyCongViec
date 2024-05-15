@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
-import DatePicker from 'react-native-date-picker';
+import DatePicker from '@react-native-community/datetimepicker';
 
 const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
@@ -11,7 +11,7 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
   const toggleImportanceModal = () => {
     setIsImportanceModalVisible(!isImportanceModalVisible);
   };
-
+  
   const handleImportanceChange = (importance) => {
     setSelectedImportance(importance);
     toggleImportanceModal();
@@ -39,12 +39,16 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
             onChangeText={text => onChange('Nội Dung Công Việc', text)}
           />
 
- {/* Date picker */}
+        {/* Date picker */}
+        <View style={styles.input}>
+            <Text style={styles.inputLabel}>Thời Gian</Text>
           <DatePicker
             date={selectedDate}
             onDateChange={handleDateChange}
             mode="datetime" // You can choose 'date', 'time', or 'datetime'
+            value={selectedDate}
           />
+          </View>
 
           <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
             <Text style={styles.importanceText}>Mức Độ Quan Trọng</Text>
