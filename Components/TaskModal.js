@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
-import DatePicker from 'react-native-date-picker';
+import DatePicker from '@react-native-community/datetimepicker';
 
 const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
@@ -44,6 +44,7 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
             date={selectedDate}
             onDateChange={handleDateChange}
             mode="datetime" // You can choose 'date', 'time', or 'datetime'
+            value={selectedDate}
           />
 
           <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
