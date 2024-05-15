@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 
-const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, taskTag, onChange, onSubmit, isEditing }) => {
+const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
-  const [selectedImportance, setSelectedImportance] = useState(taskTag); // Lưu trữ mức độ quan trọng hiện tại
+  const [selectedImportance, setSelectedImportance] = useState(taskTag);
+  const [selectedDate, setSelectedDate] = useState(new Date()); // time 
+
 
   const toggleImportanceModal = () => {
     setIsImportanceModalVisible(!isImportanceModalVisible);
   };
 
   const handleImportanceChange = (importance) => {
-    setSelectedImportance(importance); // Cập nhật mức độ quan trọng mới
+    setSelectedImportance(importance);
     toggleImportanceModal();
+  };
+  //time
+  const handleDateChange = (date) => {
+    setSelectedDate(date); // Update selected date
   };
 
   return (
@@ -31,13 +38,23 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
             value={taskDescription}
             onChangeText={text => onChange('Nội Dung Công Việc', text)}
           />
+
+ {/* Date picker */}
+          <DatePicker
+            date={selectedDate}
+            onDateChange={handleDateChange}
+            mode="datetime" // You can choose 'date', 'time', or 'datetime'
+          />
+
           <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
             <Text style={styles.importanceText}>Mức Độ Quan Trọng</Text>
             <Text style={styles.importanceLevel}>{selectedImportance}</Text>
           </TouchableOpacity>
+          
           <TouchableOpacity style={styles.button} onPress={onSubmit}>
             <Text style={styles.buttonText}>{isEditing ? 'Cập Nhật' : 'Thêm Mới'}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Đóng</Text>
           </TouchableOpacity>
@@ -71,7 +88,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 35,
+    padding: 30,
     borderRadius: 20,
     width: '80%',
     maxHeight: '80%',
@@ -118,14 +135,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   importanceButton: {
-    backgroundColor: 'grey',
+    backgroundColor: 'pink',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
     alignItems: 'center',
   },
   importanceButtonText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 16,
   },
