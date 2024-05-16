@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
 import DatePicker from '@react-native-community/datetimepicker';
 
-const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
+const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState(taskTag);
   const [selectedDate, setSelectedDate] = useState(null); // Set initial value to null
@@ -24,7 +24,7 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
   const handleDateChange = (event, date) => {
     if (date) {
       setSelectedDate(date);
-      setIsDatePickerVisible(false); // Close date picker after selection
+      setIsDatePickerVisible(false);
     }
   };
 
