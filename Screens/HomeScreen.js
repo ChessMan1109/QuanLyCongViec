@@ -5,7 +5,7 @@ import Task from '../Components/Task.js';
 import TaskModal from '../Components/TaskModal.js'; 
 import WeatherInfo from '../Components/WeatherInfo.js'; 
 import { TaskService } from '../Services/TaskService.js'; 
-import { WeatherService } from '../Services/WeatherService.js'; 
+import  { WeatherService } from '../Services/WeatherService.js'; 
 
 const HomeScreen = () => {
   const [tasks, setTasks] = useState([]); 
@@ -24,8 +24,8 @@ const HomeScreen = () => {
   }, []);
 
   const addTask = () => {
-    if (!taskName || !taskDescription) {
-      alert('Vui Lòng Điền Đầy Đủ Thông Tin');
+    if (!taskName || !taskDescription || !taskTime) {
+      alert('Vui Lòng Điền Thông Tin Đầy Đủ');
       return;
     }
    
@@ -35,9 +35,9 @@ const HomeScreen = () => {
       name: taskName,
       description: taskDescription,
       time: taskTime,
-    }; 
+    };  
 
-console.log(newTask);
+ console.log(newTask);
 
     setTasks([...tasks, newTask]); 
     TaskService.saveTasks([...tasks, newTask]); 
@@ -134,6 +134,7 @@ console.log(newTask);
           onChange={(name, value) => {
             if (name === 'Tên Công Việc') setTaskName(value);
             else if (name === 'Nội Dung Công Việc') setTaskDescription(value);
+            else if (name === 'Thời Gian Công Việc') setTaskTime(value);
             else if (name === 'Mức Độ Quan Trọng') setTaskTag(value);
           }}
           onSubmit={isEditing ? editTask : addTask}
