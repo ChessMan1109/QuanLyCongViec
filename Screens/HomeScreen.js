@@ -24,7 +24,7 @@ const HomeScreen = () => {
   }, []);
 
   const addTask = () => {
-    if (!taskName || !taskDescription || !taskTime) {
+    if (!taskName || !taskDescription) {
       alert('Vui Lòng Điền Thông Tin Đầy Đủ');
       return;
     }
