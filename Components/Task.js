@@ -32,6 +32,7 @@ const Task = ({ task, onDelete, onEdit }) => {
       <View style={styles.taskDetails}>
         <Text style={styles.taskText}>{task.name}</Text>
         <Text style={styles.taskText}>{task.time}</Text>
+        <Text style={styles.taskText}>{task.tag}</Text>
       </View>
       <TouchableOpacity onPress={onEdit} style={styles.buttonContainer}>
         <Text style={styles.editButton}>Edit</Text>

@@ -35,6 +35,7 @@ const HomeScreen = () => {
       name: taskName,
       description: taskDescription,
       time: taskTime,
+      tag: taskTag,
     };  
 
  console.log(newTask);
@@ -54,12 +55,14 @@ const HomeScreen = () => {
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
+    resetForm();
   };
 
   const resetForm = () => { 
     setTaskName('');
     setTaskDescription('');
     setTaskTime('');
+    setTaskTag('');
   };
 
   const editTask = () => {

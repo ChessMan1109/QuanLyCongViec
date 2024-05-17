@@ -5,7 +5,7 @@ import DatePicker from '@react-native-community/datetimepicker';
 const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState(taskTag);
-  const [selectedDate, setSelectedDate] = useState(null); // Set initial value to null
+  const [selectedDate, setSelectedDate] = useState(taskTime || null); // Initialize with taskTime or null
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const toggleImportanceModal = () => {
@@ -15,6 +15,7 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
   const handleImportanceChange = (importance) => {
     setSelectedImportance(importance);
     toggleImportanceModal();
+    onChange('Mức Độ Quan Trọng', importance.toLocaleString())
   };
   //time
   const openDatePicker = () => {
@@ -23,8 +24,9 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
 
   const handleDateChange = (event, date) => {
     if (date) {
-      setSelectedDate(date);
+      setSelectedDate(date.toLocaleString());
       setIsDatePickerVisible(false);
+      onChange('Thời Gian Công Việc', date.toLocaleString())
     }
   };
 
