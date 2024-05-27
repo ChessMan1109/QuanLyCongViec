@@ -2,36 +2,32 @@ import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
 import DatePicker from '@react-native-community/datetimepicker';
 
-const ImportanceModal = ({ isVisible, onClose, onSelect }) => (
-  <Modal visible={isVisible} animationType="slide" transparent={true} onRequestClose={onClose}>
-    <View style={styles.modalContainer}>
-      <View style={styles.modalContent}>
-        {['Thấp', 'Vừa', 'Cao'].map(level => (
-          <TouchableOpacity key={level} style={styles.importanceButton} onPress={() => onSelect(level)}>
-            <Text style={styles.importanceButtonText}>{level}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </View>
-  </Modal>
-);
-
-const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onChange, onSubmit, isEditing }) => {
+const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState(taskTag);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(taskTime || null); // Initialize with taskTime or null
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
+  const toggleImportanceModal = () => {
+    setIsImportanceModalVisible(!isImportanceModalVisible);
+  };
+  
   const handleImportanceChange = (importance) => {
     setSelectedImportance(importance);
-    setIsImportanceModalVisible(false);
+    toggleImportanceModal();
+    onChange('Mức Độ Quan Trọng', importance.toLocaleString())
   };
+  //time
+  const openDatePicker = () => {
+    setIsDatePickerVisible(true);
+  };
+  
   const handleDateChange = (event, date) => {
     if (date) {
-      setSelectedDate(date);
-      onChange('taskeTime', date);
+      setSelectedDate(date.toLocaleString());
+      setIsDatePickerVisible(false);
+      onChange('Thời Gian Công Việc', date.toLocaleString())
     }
-    setIsDatePickerVisible(false);
   };
 
   return (
@@ -43,43 +39,58 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTag, onC
             style={styles.input}
             placeholder="Tên Công Việc"
             value={taskName}
-            onChangeText={text => onChange('taskName', text)}
+            onChangeText={text => onChange('Tên Công Việc', text)}
           />
           <TextInput
             style={styles.input}
             placeholder="Nội Dung Công Việc"
             value={taskDescription}
-            onChangeText={text => onChange('taskDescription', text)}
+            onChangeText={text => onChange('Nội Dung Công Việc', text)}
           />
-          <TouchableOpacity style={styles.input} onPress={() => setIsDatePickerVisible(true)}>
-            <Text>Thời Gian</Text>
-            <Text>{selectedDate ? selectedDate.toLocaleString() : 'Chọn thời gian'}</Text>
+
+        {/* Date picker */}
+        <TouchableOpacity style={styles.input} onPress={openDatePicker}>
+          <Text style={styles.inputLabel}>Thời Gian</Text>
+          <Text>{selectedDate ? selectedDate.toLocaleString() : 'Chọn thời gian'}</Text>
+        </TouchableOpacity>
+
+        {isDatePickerVisible && (
+          <DatePicker
+            value={selectedDate || new Date()}
+            mode="datetime"
+            onChange={handleDateChange}
+          />
+        )}
+
+          <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
+            <Text style={styles.importanceText}>Mức Độ Quan Trọng</Text>
+            <Text style={styles.importanceLevel}>{selectedImportance}</Text>
           </TouchableOpacity>
-          {isDatePickerVisible && (
-            <DatePicker
-              value={selectedDate || new Date()}
-              mode="datetime"
-              display="default"
-              onChange={handleDateChange}
-            />
-          )}
-          <TouchableOpacity style={styles.input} onPress={() => setIsImportanceModalVisible(true)}>
-            <Text>Mức Độ Quan Trọng</Text>
-            <Text>{selectedImportance}</Text>
-          </TouchableOpacity>
+          
           <TouchableOpacity style={styles.button} onPress={onSubmit}>
             <Text style={styles.buttonText}>{isEditing ? 'Cập Nhật' : 'Thêm Mới'}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Đóng</Text>
           </TouchableOpacity>
         </View>
       </View>
-      <ImportanceModal 
-        isVisible={isImportanceModalVisible} 
-        onClose={() => setIsImportanceModalVisible(false)} 
-        onSelect={handleImportanceChange} 
-      />
+      <Modal visible={isImportanceModalVisible} animationType="slide" transparent={true} onRequestClose={toggleImportanceModal}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.importanceButton} onPress={() => handleImportanceChange('Thấp')}>
+              <Text style={styles.importanceButtonText}>Thấp</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.importanceButton} onPress={() => handleImportanceChange('Vừa')}>
+              <Text style={styles.importanceButtonText}>Vừa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.importanceButton} onPress={() => handleImportanceChange('Cao')}>
+              <Text style={styles.importanceButtonText}>Cao</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </Modal>
   );
 };
@@ -110,11 +121,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderWidth: 2,
     marginBottom: 15,
     paddingHorizontal: 10,
-    borderRadius: 10,
-    backgroundColor: '#f0f0f0',
+    borderRadius: 35,
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: 'blue',
@@ -140,7 +151,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   importanceButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: 'pink',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
@@ -149,6 +160,12 @@ const styles = StyleSheet.create({
   importanceButtonText: {
     color: 'black',
     fontWeight: 'bold',
+    fontSize: 16,
+  },
+  importanceText: {
+    fontSize: 16,
+  },
+  importanceLevel: {
     fontSize: 16,
   },
 });
