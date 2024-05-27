@@ -62,7 +62,7 @@ const HomeScreen = () => {
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
-    resertForm();
+    resetForm();
   };
 
   const resetForm = () => {
