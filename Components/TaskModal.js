@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Modal, View, TouchableOpacity, Text, StyleSheet, TextInput } from 'react-native';
-import DatePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, taskTag, onChange, onSubmit, isEditing }) => {
   const [isImportanceModalVisible, setIsImportanceModalVisible] = useState(false);
   const [selectedImportance, setSelectedImportance] = useState(taskTag);
-  const [selectedDate, setSelectedDate] = useState(taskTime || null); // Initialize with taskTime or null
+  const [selectedDate, setSelectedDate] = useState(taskTime || new Date());
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const toggleImportanceModal = () => {
@@ -15,18 +15,20 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
   const handleImportanceChange = (importance) => {
     setSelectedImportance(importance);
     toggleImportanceModal();
-    onChange('Mức Độ Quan Trọng', importance.toLocaleString())
+    onChange('Mức Độ Quan Trọng', importance.toLocaleString());
   };
-  //time
+
   const openDatePicker = () => {
     setIsDatePickerVisible(true);
   };
   
   const handleDateChange = (event, date) => {
     if (date) {
-      setSelectedDate(date.toLocaleString());
+      setSelectedDate(date);
       setIsDatePickerVisible(false);
-      onChange('Thời Gian Công Việc', date.toLocaleString())
+      onChange('Thời Gian Công Việc', date.toLocaleString());
+    } else {
+      setIsDatePickerVisible(false);
     }
   };
 
@@ -47,26 +49,26 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
             value={taskDescription}
             onChangeText={text => onChange('Nội Dung Công Việc', text)}
           />
+          
+          <TouchableOpacity style={styles.input} onPress={openDatePicker}>
+            <Text style={styles.inputLabel}>Thời Gian</Text>
+            <Text>{selectedDate ? selectedDate.toLocaleString() : 'Chọn thời gian'}</Text>
+          </TouchableOpacity>
 
-        {/* Date picker */}
-        <TouchableOpacity style={styles.input} onPress={openDatePicker}>
-          <Text style={styles.inputLabel}>Thời Gian</Text>
-          <Text>{selectedDate ? selectedDate.toLocaleString() : 'Chọn thời gian'}</Text>
-        </TouchableOpacity>
-
-        {isDatePickerVisible && (
-          <DatePicker
-            value={selectedDate || new Date()}
-            mode="datetime"
-            onChange={handleDateChange}
-          />
-        )}
+          {isDatePickerVisible && (
+            <DateTimePicker
+              value={selectedDate}
+              mode="datetime"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
 
           <TouchableOpacity style={styles.input} onPress={toggleImportanceModal}>
             <Text style={styles.importanceText}>Mức Độ Quan Trọng</Text>
             <Text style={styles.importanceLevel}>{selectedImportance}</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={styles.button} onPress={onSubmit}>
             <Text style={styles.buttonText}>{isEditing ? 'Cập Nhật' : 'Thêm Mới'}</Text>
           </TouchableOpacity>
@@ -76,6 +78,7 @@ const TaskModal = ({ isVisible, onClose, taskName, taskDescription, taskTime, ta
           </TouchableOpacity>
         </View>
       </View>
+
       <Modal visible={isImportanceModalVisible} animationType="slide" transparent={true} onRequestClose={toggleImportanceModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginBottom: 15,
     paddingHorizontal: 10,
-    borderRadius: 35,
+    borderRadius: 5,
     backgroundColor: 'white',
   },
   button: {
@@ -166,6 +169,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   importanceLevel: {
+    fontSize: 16,
+  },
+  inputLabel: {
     fontSize: 16,
   },
 });
